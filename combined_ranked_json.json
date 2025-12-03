@@ -1,0 +1,30 @@
+[
+  {
+    "ranks": [
+      {
+        "Result": "A",
+        "reason": "This estimation demonstrates a high level of realism and a human-centered approach:\n\n1. Research/Discovery: Strong evidence of research and discovery, with explicit 'Research' tasks kicking off nearly every major feature/module (e.g., researching RBAC models, auth flows, onboarding best practices, messaging flows, dashboard use cases, product models, catalogue UX, etc.). This matches real-world project environments.\n\n2. Task Breakdown: Excellent step-by-step breakdown for each feature, clearly distinguishing design, backend, frontend, testing, and integration steps. Testing and validation (manual/automated) are regularly called out, and complex UI/UX flows are detailed.\n\n3. Hidden Complexity: Respondent highlights and includes buffer for edge cases like KYC upload workflows, approval/reject flows, badge management, error handling for login, messaging thread handling, notifications, and more.\n\n4. Integration Buffers: Integration tasks include error, fallback, notification, and edge-case handling\u2014suggesting realistic pessimistic hours that allow room for troubleshooting and rewrites. Flows like password reset, messaging, and onboarding include token/email edge cases.\n\nIn summary, this estimate aligns with best-practices in real human development and PM assumptions, and closely mirrors the complexity found in the 'Sample' guidance table. Small areas for improvement (slightly more explicit API error branching, environment setup) are minor.\n\nOverall, this is a highly credible, human-centered project estimate.",
+        "rank": 9
+      },
+      {
+        "Result": "B",
+        "reason": "This estimation is much improved over typical naive/happy path estimates but does not rise fully to the level of A:\n\n1. Research/Discovery: The effort does include early research and breakdown (e.g., role schema, policies, onboarding requirements, messaging), but the depth and frequency are more limited compared to A. Fewer explicit prototyping/spike tasks for unknowns.\n\n2. Task Breakdown: The estimate is solid, with distinct backend/frontend/UI segments and good attention to user flow (validation, approvals, status updates). However, some repetitive/boilerplate tasks are grouped, and a few features (metrics, email, permissions, cron jobs) could use deeper exploration.\n\n3. Hidden Complexity: The effort does call out KYC, email sending, cron jobs, scheduling, etc., but the breakdown often presumes direct DB/APIs without highlighting data normalization, retries, inconsistent states, or full error/fallback handling (especially for integrations). There is basic edge case recognition, but lacks systematic visibility in each area.\n\n4. Integration Buffers: The pessimistic estimates are moderate, but could be tighter for advanced features (complex admin UIs, email synchronization, failure handling). Some tasks (like 'Add Product', 'Messaging', 'Password Reset') could reveal deeper integration issues in practice.\n\nOverall, this estimate is much more robust and realistic than a majority of project estimates, but it misses a level of anticipation, granularity, and integration complexity showcased in the model sample or Estimate A.\n\nThis would be considered a highly professional breakdown by most, but would require vigilance and change management during implementation as real-world complexity inevitably surfaces. It is short of a true '10'.",
+        "rank": 7
+      }
+    ]
+  },
+  {
+    "ranks": [
+      {
+        "Result": "A",
+        "reason": "This estimation is well-structured and adheres to the discovery principle by explicitly including 'Research' or 'Prototyping' tasks in almost every feature. The breakdown is logical (separating UI, API, and testing). However, the total 'Most Likely' time (approximately 394 hours for a full B2B MVP, including complex features like RBAC, KYC workflow, subscriptions, and threaded messaging) is extremely low. This estimate assumes a near-perfect execution path, despite acknowledging complexity. The integration buffers are not realistically reflected in the tight duration estimates for such an ambitious scope, leading to a high risk of schedule overrun.",
+        "rank": 4
+      },
+      {
+        "Result": "B",
+        "reason": "This is a highly realistic and human-centered estimation. It provides an exceptionally granular breakdown, explicitly separating backend definitions (schema, APIs), frontend UI, security checks (rate limiting), external integrations (S3 storage, SMTP), and automated tasks (cron jobs for price expiry, unreplied message alerts). This level of detail successfully surfaces hidden complexity. While the overall estimate is much higher (approximately 668 hours 'Most Likely'), this duration better reflects the true effort required for a single developer to build and thoroughly test an interconnected system involving multiple user roles, complex state management (KYC, subscriptions), and messaging infrastructure. The granular tasks and higher overall duration provide realistic buffers for troubleshooting and integration issues.",
+        "rank": 9
+      }
+    ]
+  }
+]

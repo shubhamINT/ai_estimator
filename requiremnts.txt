@@ -1,0 +1,5 @@
+fastapi[standard]
+pandas
+google-genai
+chromadb
+docling

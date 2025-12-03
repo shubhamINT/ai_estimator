@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Project Estimator</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- SheetJS (Excel) -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <!-- Marked (Markdown Rendering) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    animation: {
+                        'fade-in-down': 'fadeInDown 0.2s ease-out'
+                    },
+                    keyframes: {
+                        fadeInDown: {
+                            '0%': { opacity: '0', transform: 'translateY(-10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Table Styling */
+        .custom-scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        
+        td[contenteditable="true"]:focus {
+            outline: 2px solid #0ea5e9;
+            background-color: #f0f9ff;
+            border-radius: 4px;
+        }
+        
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- LIVELY ANIMATIONS --- */
+        .progress-live {
+            background-image: linear-gradient(
+                45deg, 
+                rgba(255, 255, 255, 0.2) 25%, 
+                transparent 25%, 
+                transparent 50%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                rgba(255, 255, 255, 0.2) 75%, 
+                transparent 75%, 
+                transparent
+            );
+            background-size: 1rem 1rem;
+            animation: progress-stripes 1s linear infinite;
+        }
+
+        @keyframes progress-stripes {
+            from { background-position: 1rem 0; }
+            to { background-position: 0 0; }
+        }
+
+        /* Arrow Transition */
+        .rotate-180 { transform: rotate(180deg); }
+        .transition-transform { transition: transform 0.2s ease-in-out; }
+
+        /* --- MARKDOWN STYLES --- */
+        .markdown-body { font-size: 0.9rem; line-height: 1.5; color: #334155; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin: 0.75rem 0; font-size: 0.8rem; border: 1px solid #e2e8f0; }
+        .markdown-body th { background-color: #f8fafc; border: 1px solid #e2e8f0; padding: 0.5rem 0.75rem; text-align: left; font-weight: 700; color: #334155; }
+        .markdown-body td { border: 1px solid #e2e8f0; padding: 0.4rem 0.75rem; color: #475569; }
+        .markdown-body h1, .markdown-body h2 { margin-top: 1.25rem; margin-bottom: 0.5rem; font-weight: 700; color: #0f172a; }
+        .markdown-body h1 { font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+        .markdown-body ul { list-style-type: disc; padding-left: 1.5rem; margin: 0.5rem 0; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 h-screen flex flex-col overflow-hidden" onclick="closeDropdownOnClickOutside(event)">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-slate-200 flex-none z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-8">
+                    <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('generator')">
+                        <div class="bg-brand-600 text-white p-1.5 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <span class="font-bold text-xl tracking-tight text-slate-900">AI Estimator</span>
+                    </div>
+
+                    <div class="hidden md:flex space-x-4">
+                        <button onclick="switchTab('generator')" id="nav-generator" class="px-3 py-2 rounded-md text-sm font-medium text-brand-600 bg-brand-50 transition-colors">
+                            Generator
+                        </button>
+                        <button onclick="switchTab('kb')" id="nav-kb" class="px-3 py-2 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors">
+                            Knowledge Base
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 h-[calc(100vh-64px)] overflow-y-auto custom-scrollbar">
+        
+        <!-- ======================= GENERATOR VIEW ======================= -->
+        <div id="view-generator" class="h-full flex flex-col">
+            
+            <!-- SECTION 1: Input & Config -->
+            <div id="inputSection" class="fade-in flex flex-col h-full">
+                
+                <div class="text-center max-w-3xl mx-auto space-y-2 mb-6 flex-none">
+                    <h1 class="text-3xl font-bold text-slate-900">Generate Project Estimates</h1>
+                    <p class="text-slate-500 text-sm">Describe your project and select your AI team.</p>
+                </div>
+
+                <!-- Main Grid: Fills remaining height on desktop -->
+                <div class="flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 pb-2">
+                    
+                    <!-- LEFT COLUMN: Main Input (Span 8) -->
+                    <div class="lg:col-span-8 flex flex-col h-full min-h-[400px]">
+                        <div class="relative group text-left h-full flex flex-col">
+                            <div class="absolute -inset-0.5 bg-gradient-to-r from-brand-500 to-cyan-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                            <div class="relative bg-white rounded-xl shadow-xl flex flex-col h-full border border-slate-100 overflow-hidden">
+                                <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex-none">
+                                    <h3 class="font-bold text-slate-700">Project Details</h3>
+                                </div>
+                                <textarea id="problemStatement" class="w-full p-6 border-0 focus:ring-0 text-slate-700 placeholder-slate-400 resize-none outline-none text-base bg-transparent flex-grow overflow-y-auto custom-scrollbar" placeholder="Describe your project here in detail..."></textarea>
+                                <div class="flex-none bg-white border-t border-slate-100">
+                                    <div id="fileListContainer" class="px-6 py-2 flex flex-wrap gap-2 min-h-[30px]"></div>
+                                    <div class="px-6 py-4 flex justify-between items-center">
+                                        <div class="flex items-center">
+                                            <input type="file" id="fileInput" multiple class="hidden" onchange="handleFiles(this.files)">
+                                            <button onclick="document.getElementById('fileInput').click()" class="text-slate-500 hover:text-brand-600 flex items-center gap-2 text-sm font-medium transition-colors p-2 rounded-md hover:bg-slate-50">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                                                </svg>
+                                                <span>Attach Files</span>
+                                            </button>
+                                        </div>
+                                        <button onclick="startProcessing()" class="bg-brand-600 hover:bg-brand-700 text-white px-8 py-2.5 rounded-lg font-medium shadow-md shadow-brand-500/30 transition-all flex items-center gap-2">
+                                            <span>Generate Plan</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: Model Configuration (Span 4) -->
+                    <div class="lg:col-span-4 flex flex-col h-full min-h-[400px]">
+                         <div class="relative group text-left h-full">
+                            <div class="absolute -inset-0.5 bg-gradient-to-r from-brand-500 to-cyan-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                            <div class="relative bg-white rounded-xl shadow-xl border border-slate-100 p-0 h-full flex flex-col overflow-hidden">
+                                <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex-none flex items-center gap-2">
+                                    <div class="bg-indigo-50 p-1.5 rounded-md text-indigo-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                                        </svg>
+                                    </div>
+                                    <h3 class="font-bold text-slate-700">Team Configuration</h3>
+                                </div>
+                                <div class="p-6 space-y-6 flex-grow overflow-y-auto custom-scrollbar">
+                                    <div class="relative">
+                                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Add Model to Team</label>
+                                        <button id="dropdownTrigger" onclick="toggleCustomDropdown()" class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 p-3 flex justify-between items-center transition-all hover:border-brand-400 hover:bg-white">
+                                            <span id="dropdownLabel">Select a model...</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+                                        <div id="customDropdownMenu" class="hidden absolute z-50 w-full mt-1 bg-white rounded-lg shadow-xl border border-slate-100 max-h-60 overflow-y-auto custom-scrollbar animate-fade-in-down"></div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Active Agents</label>
+                                        <div id="selectedModelsContainer" class="flex flex-col gap-2 min-h-[100px] p-3 bg-slate-50 rounded-lg border border-slate-200 border-dashed">
+                                            <span class="text-xs text-slate-400 italic w-full text-center py-4">No models selected.<br>Add from list above.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-slate-50 p-4 border-t border-slate-100 text-xs text-slate-400 text-center flex-none">
+                                    AI models will collaborate on your plan.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: Loading Bar (FIXED WIDTH) -->
+            <div id="loadingSection" class="hidden flex-col items-center justify-center py-20 w-full max-w-xl mx-auto space-y-6 fade-in flex-grow">
+                <!-- Message Header -->
+                <h3 class="text-xl font-semibold text-slate-800 h-8 transition-all w-full text-center" id="aiMessage">Initializing...</h3>
+                
+                <!-- Progress Bar Container -->
+                <div class="w-full bg-slate-200 rounded-full h-5 overflow-hidden relative shadow-inner">
+                    <div id="progressBar" class="progress-live bg-gradient-to-r from-brand-500 to-brand-600 h-5 rounded-full w-0 flex items-center justify-end px-2 shadow-[0_0_10px_rgba(14,165,233,0.5)]">
+                        <span id="progressText" class="text-[10px] text-white font-bold opacity-0 drop-shadow-md">0%</span>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-2 text-sm text-slate-400">
+                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <p id="loadingTechnicalDetail">Connecting to server...</p>
+                </div>
+            </div>
+
+            <!-- SECTION 3: Results -->
+            <div id="resultSection" class="hidden fade-in space-y-6 pb-20">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <h2 class="text-2xl font-bold text-slate-800">Estimation Grid</h2>
+                            <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-medium border border-green-200">Completed</span>
+                        </div>
+                        <p class="text-sm text-slate-500">Review the AI generated breakdown below. Click rows for details.</p>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="resetApp()" class="px-4 py-2 text-slate-600 bg-white border border-slate-300 hover:bg-slate-50 rounded-lg font-medium text-sm transition-all shadow-sm">
+                            New Estimate
+                        </button>
+                        <button onclick="saveResultToKB()" class="px-4 py-2 text-brand-700 bg-brand-50 border border-brand-200 hover:bg-brand-100 rounded-lg font-medium text-sm transition-all flex items-center gap-2 shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                            </svg>
+                            Save to Library
+                        </button>
+                        <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 rounded-lg font-medium shadow-md shadow-emerald-500/20 transition-all flex items-center gap-2 text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Download Excel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden ring-1 ring-slate-900/5">
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-left border-collapse" id="estimateTable">
+                            <thead>
+                                <tr class="bg-slate-50/50 border-b border-slate-200 text-xs font-semibold uppercase tracking-wider text-slate-500">
+                                    <th class="px-6 py-4 w-10"></th> 
+                                    <th class="px-6 py-4">Task Name</th>
+                                    <th class="px-6 py-4">Type</th>
+                                    <th class="px-6 py-4 text-center text-emerald-600">Optimistic (h)</th>
+                                    <th class="px-6 py-4 text-center text-brand-600">Most Likely (h)</th>
+                                    <th class="px-6 py-4 text-center text-rose-600">Pessimistic (h)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody" class="divide-y divide-slate-100 text-sm text-slate-700"></tbody>
+                            <tfoot class="bg-slate-50 border-t border-slate-200 font-semibold text-slate-800">
+                                <tr>
+                                    <td class="px-6 py-4 text-right" colspan="3">Feature Subtotal</td>
+                                    <td class="px-6 py-4 text-center" id="totalOptimistic">0</td>
+                                    <td class="px-6 py-4 text-center" id="totalLikely">0</td>
+                                    <td class="px-6 py-4 text-center" id="totalPessimistic">0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 relative overflow-hidden">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800">Project Summary & Overheads</h3>
+                            <p class="text-sm text-slate-500">Adjust phase percentages to calculate total project effort (PERT).</p>
+                        </div>
+                        <button onclick="calculateSummary()" class="bg-slate-800 hover:bg-slate-900 text-white px-6 py-2 rounded-lg font-medium shadow-lg shadow-slate-300/50 transition-all flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            Calculate Summary
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">QA (%)</label>
+                            <input type="number" id="qaPercent" value="15" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">UAT (%)</label>
+                            <input type="number" id="uatPercent" value="10" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">DevOps (%)</label>
+                            <input type="number" id="devopsPercent" value="5" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Critical (%)</label>
+                            <input type="number" id="criticalPercent" value="8" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <div id="summaryResultsArea" class="hidden border-t border-slate-100 pt-6">
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <div class="text-xs text-slate-500 mb-1">QA Hours</div>
+                                <div class="text-lg font-bold text-slate-700" id="resQa">0.0</div>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <div class="text-xs text-slate-500 mb-1">UAT Hours</div>
+                                <div class="text-lg font-bold text-slate-700" id="resUat">0.0</div>
+                            </div>
+                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <div class="text-xs text-slate-500 mb-1">DevOps Hours</div>
+                                <div class="text-lg font-bold text-slate-700" id="resDevops">0.0</div>
+                            </div>
+                             <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                                <div class="text-xs text-slate-500 mb-1">Critical Buffer</div>
+                                <div class="text-lg font-bold text-slate-700" id="resCritical">0.0</div>
+                            </div>
+                            <div class="col-span-2 md:col-span-1 bg-brand-50 p-3 rounded-lg border border-brand-100 ring-1 ring-brand-200">
+                                <div class="text-xs text-brand-600 font-bold uppercase mb-1">Total Effort</div>
+                                <div class="text-xl font-bold text-brand-700" id="resTotal">0.0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================= KNOWLEDGE BASE VIEW ======================= -->
+        <div id="view-kb" class="hidden fade-in h-full flex flex-col">
+             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 flex-none">
+                <div>
+                    <button onclick="switchTab('generator')" class="md:hidden text-slate-500 hover:text-brand-600 text-sm mb-2 flex items-center gap-1">
+                        &larr; Back to Generator
+                    </button>
+                    <h1 class="text-3xl font-bold text-slate-900">Knowledge Base</h1>
+                    <p class="text-slate-500 mt-1">Previous estimates and historical project data.</p>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-slate-300 shadow-sm">
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Show:</span>
+                        <select id="kbLimitSelect" onchange="fetchKnowledgeBase()" class="text-sm text-slate-700 bg-transparent border-none outline-none focus:ring-0 cursor-pointer p-0">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+
+                    <input type="file" id="kbUploadInput" class="hidden" onchange="uploadToKB(this.files)">
+                    <button onclick="document.getElementById('kbUploadInput').click()" class="bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg font-medium shadow-sm flex items-center gap-2 text-sm transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                        Upload
+                    </button>
+                </div>
+            </div>
+
+            <div id="kbLoader" class="flex justify-center py-20 hidden">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600"></div>
+            </div>
+
+            <div id="kbGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-y-auto pb-10"></div>
+        </div>
+
+    </main>
+
+    <!-- DETAILS MODAL -->
+    <div id="detailModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-5xl max-h-[90vh] flex flex-col">
+                    <div class="bg-white px-6 py-4 border-b border-slate-200 flex justify-between items-center sticky top-0 z-10">
+                        <h3 class="text-lg font-bold leading-6 text-slate-900 truncate pr-4" id="modalTitle">Project Title</h3>
+                        <button type="button" class="text-slate-400 hover:text-slate-500 focus:outline-none bg-slate-50 p-1 rounded-full hover:bg-slate-100 transition-colors" onclick="closeModal()">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="px-8 py-6 overflow-y-auto custom-scrollbar flex-grow bg-white">
+                         <div class="max-w-none mx-auto">
+                            <div id="modalContent" class="markdown-body"></div>
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 px-6 py-3 flex justify-end gap-3 sticky bottom-0 border-t border-slate-200">
+                        <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 sm:mt-0 sm:w-auto transition-all" onclick="closeModal()">Close Viewer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-800 text-white px-4 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-[110] flex items-center gap-3">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span id="toastMessage">Action Successful</span>
+    </div>
+
+    <script>
+        // API URL Configuration
+        const API_BASE = "http://127.0.0.1:8000";
+        const API_SUBMIT = `${API_BASE}/submit`;
+        const API_MODELS = `${API_BASE}/available_models`;
+        const API_GET_ESTIMATES = `${API_BASE}/get_estimates`;
+        const API_ADD_ESTIMATE = `${API_BASE}/add_estimate`;
+        const API_DELETE_ESTIMATE = `${API_BASE}/delete_estimate`;
+        const API_SUMMARY = `${API_BASE}/calculate_summary`;
+        
+        let selectedFiles = [];
+        let kbLoaded = false;
+        let globalFeaturesData = [];
+        
+        let selectedOpenAIModels = new Set();
+        let selectedGeminiModels = new Set();
+        let rawOpenAIList = [];
+        let rawGeminiList = [];
+
+        window.onload = function() {
+            fetchModels();
+        };
+
+        function toggleCustomDropdown() {
+            const menu = document.getElementById('customDropdownMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        function closeDropdownOnClickOutside(event) {
+            const dropdown = document.getElementById('customDropdownMenu');
+            const trigger = document.getElementById('dropdownTrigger');
+            if (!dropdown.classList.contains('hidden') && !dropdown.contains(event.target) && !trigger.contains(event.target)) {
+                dropdown.classList.add('hidden');
+            }
+        }
+
+        function renderCustomDropdown() {
+            const menu = document.getElementById('customDropdownMenu');
+            menu.innerHTML = '';
+            const availOpenAI = rawOpenAIList.filter(m => !selectedOpenAIModels.has(m));
+            const availGemini = rawGeminiList.filter(m => !selectedGeminiModels.has(m));
+
+            if (availOpenAI.length === 0 && availGemini.length === 0) {
+                menu.innerHTML = `<div class="p-3 text-sm text-slate-400 italic text-center">All models selected</div>`;
+                return;
+            }
+
+            if (availOpenAI.length > 0) {
+                const header = document.createElement('div');
+                header.className = "px-3 py-2 text-xs font-bold text-slate-400 uppercase bg-slate-50 tracking-wider";
+                header.innerText = "OpenAI Models";
+                menu.appendChild(header);
+
+                availOpenAI.forEach(model => {
+                    const item = document.createElement('div');
+                    item.className = "px-4 py-2 text-sm text-slate-700 hover:bg-brand-50 hover:text-brand-700 cursor-pointer transition-colors flex items-center justify-between group";
+                    item.innerHTML = `<span>${model}</span> <span class="opacity-0 group-hover:opacity-100 text-brand-500 font-bold">+</span>`;
+                    item.onclick = () => selectModel(model, 'openai');
+                    menu.appendChild(item);
+                });
+            }
+
+            if (availGemini.length > 0) {
+                const header = document.createElement('div');
+                header.className = "px-3 py-2 text-xs font-bold text-slate-400 uppercase bg-slate-50 tracking-wider border-t border-slate-100";
+                header.innerText = "Gemini Models";
+                menu.appendChild(header);
+
+                availGemini.forEach(model => {
+                    const item = document.createElement('div');
+                    item.className = "px-4 py-2 text-sm text-slate-700 hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition-colors flex items-center justify-between group";
+                    item.innerHTML = `<span>${model}</span> <span class="opacity-0 group-hover:opacity-100 text-blue-500 font-bold">+</span>`;
+                    item.onclick = () => selectModel(model, 'gemini');
+                    menu.appendChild(item);
+                });
+            }
+        }
+
+        function selectModel(model, type) {
+            if(type === 'openai') selectedOpenAIModels.add(model);
+            else selectedGeminiModels.add(model);
+            toggleCustomDropdown(); 
+            renderSelectedModels(); 
+            renderCustomDropdown(); 
+        }
+
+        function removeModel(type, model) {
+            if(type === 'openai') selectedOpenAIModels.delete(model);
+            else selectedGeminiModels.delete(model);
+            renderSelectedModels(); 
+            renderCustomDropdown(); 
+        }
+
+        function renderSelectedModels() {
+            const container = document.getElementById('selectedModelsContainer');
+            container.innerHTML = '';
+
+            if (selectedOpenAIModels.size === 0 && selectedGeminiModels.size === 0) {
+                container.innerHTML = '<span class="text-xs text-slate-400 italic w-full text-center py-4">No models selected.<br>Add from list above.</span>';
+                return;
+            }
+
+            selectedOpenAIModels.forEach(model => {
+                createModelChip(container, model, 'openai', 'bg-white text-emerald-700 border-emerald-200 shadow-sm hover:border-emerald-300');
+            });
+
+            selectedGeminiModels.forEach(model => {
+                createModelChip(container, model, 'gemini', 'bg-white text-blue-700 border-blue-200 shadow-sm hover:border-blue-300');
+            });
+        }
+
+        function createModelChip(container, model, type, colorClasses) {
+            const chip = document.createElement('div');
+            chip.className = `flex items-center gap-3 px-3 py-2 rounded-lg text-sm border ${colorClasses} transition-all animate-[fadeIn_0.2s_ease-out] w-full justify-between group`;
+            const iconColor = type === 'openai' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600';
+            
+            chip.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <div class="${iconColor} p-1 rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <span class="font-medium">${model}</span>
+                </div>
+                <button onclick="removeModel('${type}', '${model}')" class="text-slate-300 hover:text-rose-500 transition-colors focus:outline-none p-1 rounded hover:bg-slate-50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            `;
+            container.appendChild(chip);
+        }
+
+        async function fetchModels() {
+            try {
+                const res = await fetch(API_MODELS);
+                const json = await res.json();
+                if(json.status === 0 && json.data) {
+                    rawOpenAIList = json.data.openai_models;
+                    rawGeminiList = json.data.gemini_models;
+                    renderCustomDropdown(); 
+                } else {
+                    showToast("Failed to load model list", "error");
+                }
+            } catch (e) {
+                console.error(e);
+                showToast("Connection error loading models", "error");
+            }
+        }
+
+        function switchTab(tab) {
+            const genView = document.getElementById('view-generator');
+            const kbView = document.getElementById('view-kb');
+            const navGen = document.getElementById('nav-generator');
+            const navKb = document.getElementById('nav-kb');
+
+            if (tab === 'generator') {
+                genView.classList.remove('hidden');
+                kbView.classList.add('hidden');
+                navGen.className = "px-3 py-2 rounded-md text-sm font-medium text-brand-600 bg-brand-50 transition-colors";
+                navKb.className = "px-3 py-2 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors";
+            } else {
+                genView.classList.add('hidden');
+                kbView.classList.remove('hidden');
+                navKb.className = "px-3 py-2 rounded-md text-sm font-medium text-brand-600 bg-brand-50 transition-colors";
+                navGen.className = "px-3 py-2 rounded-md text-sm font-medium text-slate-500 hover:text-slate-700 hover:bg-slate-50 transition-colors";
+                if (!kbLoaded) fetchKnowledgeBase();
+            }
+        }
+
+        function handleFiles(files) {
+            selectedFiles = [...selectedFiles, ...Array.from(files)];
+            renderFileList();
+            document.getElementById('fileInput').value = ''; 
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            renderFileList();
+        }
+
+        function renderFileList() {
+            const container = document.getElementById('fileListContainer');
+            container.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const badge = document.createElement('div');
+                badge.className = 'inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200';
+                badge.innerHTML = `
+                    <span class="max-w-[150px] truncate">${file.name}</span>
+                    <button onclick="removeFile(${index})" class="text-slate-400 hover:text-rose-500 transition-colors">x</button>
+                `;
+                container.appendChild(badge);
+            });
+        }
+
+        const aiMessages = ["Consulting Neural Council...", "Analyzing features...", "Structuring database...", "Reviewing API...", "Synthesizing report..."];
+        let currentProgress = 0, targetProgress = 0, animationFrameId, messageInterval;
+
+        async function startProcessing() {
+            const statement = document.getElementById('problemStatement').value;
+            if (!statement.trim() && selectedFiles.length === 0) { alert("Please enter description or upload file."); return; }
+            if (selectedOpenAIModels.size === 0) { alert("Select at least one OpenAI model."); return; }
+            if (selectedGeminiModels.size === 0) { alert("Select at least one Gemini model."); return; }
+
+            document.getElementById('inputSection').classList.add('hidden');
+            document.getElementById('loadingSection').classList.remove('hidden');
+            document.getElementById('loadingSection').classList.add('flex');
+            
+            currentProgress = 0; targetProgress = 15; 
+            startMessageRotator(); startProgressLoop(); 
+
+            try {
+                const formData = new FormData();
+                formData.append('details', statement);
+                selectedFiles.forEach(f => formData.append('files', f));
+                selectedOpenAIModels.forEach(m => formData.append('openai_models', m));
+                selectedGeminiModels.forEach(m => formData.append('gemini_models', m));
+
+                const response = await fetch(API_SUBMIT, { method: 'POST', body: formData });
+                if (!response.ok) throw new Error("Server Error");
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n').filter(line => line.trim() !== '');
+                    for (const line of lines) {
+                        try {
+                            const data = JSON.parse(line);
+                            if (data.status === 'progress') setTargetProgress(data.percent, data.message);
+                            else if (data.status === 'complete') {
+                                setTargetProgress(100, "Processing Complete!");
+                                setTimeout(() => { stopProgressLoop(); stopMessageRotator(); renderResults(data.data.response.features); }, 1200); 
+                            }
+                        } catch (e) { console.error(e); }
+                    }
+                }
+            } catch (error) { alert("Connection failed."); resetApp(); }
+        }
+
+        function startProgressLoop() {
+            function loop() {
+                if (currentProgress < targetProgress) {
+                    let step = (targetProgress - currentProgress) * 0.05;
+                    if (step < 0.05) step = 0.05;
+                    currentProgress += step;
+                    updateDomBar(currentProgress);
+                }
+                animationFrameId = requestAnimationFrame(loop);
+            }
+            loop();
+        }
+        function stopProgressLoop() { cancelAnimationFrame(animationFrameId); }
+        function setTargetProgress(val, msg) { targetProgress = val; document.getElementById('loadingTechnicalDetail').innerText = msg; }
+        function updateDomBar(val) {
+            document.getElementById('progressBar').style.width = val.toFixed(1) + '%';
+            document.getElementById('progressText').innerText = Math.floor(val) + '%';
+            if(val>5) document.getElementById('progressText').classList.remove('opacity-0');
+        }
+        function startMessageRotator() {
+            let i = 0;
+            const el = document.getElementById('aiMessage');
+            if(messageInterval) clearInterval(messageInterval);
+            el.innerText = aiMessages[0];
+            messageInterval = setInterval(() => { i=(i+1)%aiMessages.length; el.innerText = aiMessages[i]; }, 2500);
+        }
+        function stopMessageRotator() { clearInterval(messageInterval); }
+
+        function renderResults(features) {
+            globalFeaturesData = features; 
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            let sO=0, sL=0, sP=0;
+
+            features.forEach((f, index) => {
+                const rowId = `row-${index}`;
+                const detailId = `detail-${index}`;
+                
+                const tr = document.createElement('tr');
+                tr.id = rowId;
+                tr.className = "hover:bg-slate-50 transition-colors bg-white cursor-pointer group border-b border-slate-100";
+                tr.onclick = (e) => { 
+                    if(e.target.isContentEditable) return;
+                    toggleRow(detailId, index); 
+                };
+
+                tr.innerHTML = `
+                    <td class="px-6 py-4 text-center">
+                         <div id="icon-${index}" class="transition-transform duration-200 text-slate-400 group-hover:text-brand-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                         </div>
+                    </td>
+                    <td class="px-6 py-4 font-medium" contenteditable="true">${f.name}</td>
+                    <td class="px-6 py-4"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-800 border border-blue-100">${f.type}</span></td>
+                    <td class="px-6 py-4 text-center font-mono text-slate-600" contenteditable="true">${f.optimistic}</td>
+                    <td class="px-6 py-4 text-center font-mono font-bold text-brand-700 bg-brand-50/50" contenteditable="true">${f.most_likely}</td>
+                    <td class="px-6 py-4 text-center font-mono text-slate-600" contenteditable="true">${f.pessimistic}</td>
+                `;
+                tbody.appendChild(tr);
+
+                const trDetail = document.createElement('tr');
+                trDetail.id = detailId;
+                trDetail.className = "hidden bg-slate-50/50";
+                
+                // --- UPDATE START: Handling breakdown object with opt/likely/pess ---
+                let breakdownHtml = "";
+                if (f.breakdown && Array.isArray(f.breakdown)) {
+                    // Create a mini-table for breakdown
+                    const rows = f.breakdown.map(item => `
+                        <tr class="border-b border-slate-100 last:border-0 hover:bg-slate-100/50 transition-colors">
+                            <td class="py-2 pl-2 pr-4 text-slate-700">${item.task}</td>
+                            <td class="py-2 px-4 text-center font-mono text-xs text-emerald-600">${item.optimistic}</td>
+                            <td class="py-2 px-4 text-center font-mono text-xs text-brand-600 font-bold">${item.most_likely}</td>
+                            <td class="py-2 px-4 text-center font-mono text-xs text-rose-600">${item.pessimistic}</td>
+                        </tr>
+                    `).join('');
+
+                    breakdownHtml = `
+                        <div class="bg-white rounded-lg border border-slate-200 overflow-hidden w-full max-w-4xl shadow-sm">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-100 text-xs text-slate-500 uppercase font-semibold">
+                                    <tr>
+                                        <th class="py-2 pl-2 pr-4 text-left w-full">Sub-Task</th>
+                                        <th class="py-2 px-4 text-center w-24">Opt.</th>
+                                        <th class="py-2 px-4 text-center w-24">Likely</th>
+                                        <th class="py-2 px-4 text-center w-24">Pess.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${rows}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                } else {
+                    breakdownHtml = `<p class="text-slate-400 italic">No breakdown available.</p>`;
+                }
+                // --- UPDATE END ---
+
+                trDetail.innerHTML = `
+                    <td colspan="6" class="px-12 py-4 border-b border-slate-100 shadow-inner">
+                        <div class="text-sm">
+                            <h4 class="font-bold text-xs uppercase tracking-wide text-slate-500 mb-2">Breakdown & Tasks</h4>
+                            ${breakdownHtml}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(trDetail);
+
+                sO += f.optimistic; sL += f.most_likely; sP += f.pessimistic;
+            });
+
+            document.getElementById('totalOptimistic').textContent = sO;
+            document.getElementById('totalLikely').textContent = sL;
+            document.getElementById('totalPessimistic').textContent = sP;
+            document.getElementById('loadingSection').classList.add('hidden');
+            document.getElementById('loadingSection').classList.remove('flex');
+            document.getElementById('resultSection').classList.remove('hidden');
+        }
+
+        function toggleRow(detailId, index) {
+            const detailRow = document.getElementById(detailId);
+            const icon = document.getElementById(`icon-${index}`);
+            
+            if (detailRow.classList.contains('hidden')) {
+                detailRow.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+                document.getElementById(`row-${index}`).classList.add('bg-slate-50');
+            } else {
+                detailRow.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+                document.getElementById(`row-${index}`).classList.remove('bg-slate-50');
+            }
+        }
+
+        function resetApp() {
+            stopMessageRotator(); stopProgressLoop();
+            selectedFiles = []; renderFileList();
+            globalFeaturesData = [];
+            document.getElementById('problemStatement').value = "";
+            document.getElementById('loadingSection').classList.add('hidden');
+            document.getElementById('loadingSection').classList.remove('flex');
+            document.getElementById('resultSection').classList.add('hidden');
+            document.getElementById('inputSection').classList.remove('hidden');
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('summaryResultsArea').classList.add('hidden');
+        }
+
+        function getCombinedDataForExport() {
+            const rows = document.getElementById("estimateTable").querySelectorAll("tbody tr");
+            const exportData = [];
+            
+            globalFeaturesData.forEach((feature, index) => {
+                const domRow = document.getElementById(`row-${index}`);
+                if (!domRow) return;
+
+                const cells = domRow.querySelectorAll("td");
+                
+                const taskName = cells[1].innerText;
+                const type = cells[2].innerText;
+                const opt = parseFloat(cells[3].innerText) || 0;
+                const likely = parseFloat(cells[4].innerText) || 0;
+                const pess = parseFloat(cells[5].innerText) || 0;
+
+                // Add Main Feature Row
+                exportData.push({
+                    "Task Name": taskName,
+                    "Type": type,
+                    "Optimistic (h)": opt,
+                    "Most Likely (h)": likely,
+                    "Pessimistic (h)": pess
+                });
+
+                // --- UPDATE START: Export detailed breakdown with all 3 stats ---
+                if (feature.breakdown && Array.isArray(feature.breakdown)) {
+                    feature.breakdown.forEach(item => {
+                        exportData.push({
+                            "Task Name": "    - " + item.task, // Indented task name
+                            "Type": "Subtask",
+                            "Optimistic (h)": item.optimistic,  // Mapped correctly
+                            "Most Likely (h)": item.most_likely, // Mapped correctly
+                            "Pessimistic (h)": item.pessimistic  // Mapped correctly
+                        });
+                    });
+                }
+                // --- UPDATE END ---
+            });
+
+            exportData.push({ 
+                "Task Name": "SUBTOTAL (FEATURES)", 
+                "Type": "", 
+                "Optimistic (h)": parseFloat(document.getElementById('totalOptimistic').innerText), 
+                "Most Likely (h)": parseFloat(document.getElementById('totalLikely').innerText), 
+                "Pessimistic (h)": parseFloat(document.getElementById('totalPessimistic').innerText)
+            });
+
+            const summaryDiv = document.getElementById('summaryResultsArea');
+            if (!summaryDiv.classList.contains('hidden')) {
+                exportData.push({ "Task Name": "", "Type": "", "Optimistic (h)": "", "Most Likely (h)": "", "Pessimistic (h)": "" });
+                
+                exportData.push({ 
+                    "Task Name": "SUMMARY & OVERHEADS", 
+                    "Type": "PHASE", 
+                    "Optimistic (h)": "", 
+                    "Most Likely (h)": "HOURS", 
+                    "Pessimistic (h)": "" 
+                });
+
+                const getVal = (id) => parseFloat(document.getElementById(id).innerText.replace(/[^\d.-]/g, '')) || 0;
+
+                const qa = getVal('resQa');
+                const uat = getVal('resUat');
+                const devops = getVal('resDevops');
+                const critical = getVal('resCritical');
+                const grandTotal = getVal('resTotal');
+
+                exportData.push({ "Task Name": "QA Testing", "Type": "Overhead", "Most Likely (h)": qa });
+                exportData.push({ "Task Name": "UAT", "Type": "Overhead", "Most Likely (h)": uat });
+                exportData.push({ "Task Name": "DevOps Setup", "Type": "Overhead", "Most Likely (h)": devops });
+                exportData.push({ "Task Name": "Critical Buffer", "Type": "Buffer", "Most Likely (h)": critical });
+                
+                 exportData.push({ 
+                    "Task Name": "GRAND TOTAL ESTIMATE", 
+                    "Type": "FINAL", 
+                    "Optimistic (h)": "", 
+                    "Most Likely (h)": grandTotal, 
+                    "Pessimistic (h)": "" 
+                });
+            }
+
+            return exportData;
+        }
+
+        function exportToExcel() {
+            const data = getCombinedDataForExport();
+            const ws = XLSX.utils.json_to_sheet(data);
+            
+            const wscols = [
+                {wch: 50}, 
+                {wch: 15}, 
+                {wch: 15}, 
+                {wch: 15}, 
+                {wch: 15}  
+            ];
+            ws['!cols'] = wscols;
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Detailed Estimate");
+            XLSX.writeFile(wb, "Project_Estimate_Complete.xlsx");
+        }
+
+        async function saveResultToKB() {
+            const data = getCombinedDataForExport(); 
+            if(data.length===0) return;
+            
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+            const buf = XLSX.write(wb, { bookType:'xlsx', type:'array' });
+            const blob = new Blob([buf], {type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+            
+            let name = prompt("Filename:") || `Estimate_${Date.now()}`;
+            if(!name.endsWith('.xlsx')) name += '.xlsx';
+            
+            const fd = new FormData(); fd.append('files', new File([blob], name));
+            showToast("Saving...", "info");
+            try {
+                const res = await fetch(API_ADD_ESTIMATE, {method:'POST', body:fd});
+                const j = await res.json();
+                if(j.data && !j.data[0].error) { showToast("Saved!"); kbLoaded=false; }
+                else showToast("Error saving", "error");
+            } catch(e) { showToast("Connection failed", "error"); }
+        }
+
+        async function calculateSummary() {
+            const totalOpt = parseFloat(document.getElementById('totalOptimistic').textContent) || 0;
+            const totalLikely = parseFloat(document.getElementById('totalLikely').textContent) || 0;
+            const totalPess = parseFloat(document.getElementById('totalPessimistic').textContent) || 0;
+
+            const qaPct = parseInt(document.getElementById('qaPercent').value) || 0;
+            const uatPct = parseInt(document.getElementById('uatPercent').value) || 0;
+            const devopsPct = parseInt(document.getElementById('devopsPercent').value) || 0;
+            const criticalPct = parseInt(document.getElementById('criticalPercent').value) || 0;
+
+            const payload = {
+                total_optimistic: totalOpt,
+                total_most_likely: totalLikely,
+                total_pessimistic: totalPess,
+                qa_percentage: qaPct,
+                uat_percentage: uatPct,
+                devops_percentage: devopsPct,
+                critical_percentage: criticalPct
+            };
+
+            showToast("Calculating...", "info");
+
+            try {
+                const res = await fetch(API_SUMMARY, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const json = await res.json();
+                
+                if (json.status === 0 && json.data) {
+                    const d = json.data;
+                    document.getElementById('resQa').innerText = d.qa.toFixed(2) + ' h';
+                    document.getElementById('resUat').innerText = d.uat.toFixed(2) + ' h';
+                    document.getElementById('resDevops').innerText = d.devops.toFixed(2) + ' h';
+                    document.getElementById('resCritical').innerText = d.critical.toFixed(2) + ' h';
+                    document.getElementById('resTotal').innerText = d.total.toFixed(2) + ' h';
+                    
+                    document.getElementById('summaryResultsArea').classList.remove('hidden');
+                } else {
+                    showToast(json.message || "Calculation failed", "error");
+                }
+            } catch (e) {
+                console.error(e);
+                showToast("Server connection error", "error");
+            }
+        }
+
+        async function uploadToKB(files) {
+            if(!files.length) return;
+            const fd = new FormData();
+            Array.from(files).forEach(f => fd.append('files', f));
+            showToast("Uploading...", "info");
+            try {
+                await fetch(API_ADD_ESTIMATE, {method:'POST', body:fd});
+                showToast("Uploaded!"); kbLoaded=false;
+                if(!document.getElementById('view-kb').classList.contains('hidden')) fetchKnowledgeBase();
+            } catch(e) { showToast("Failed", "error"); }
+        }
+
+        async function fetchKnowledgeBase() {
+            const grid = document.getElementById('kbGrid');
+            const limit = document.getElementById('kbLimitSelect').value;
+            grid.innerHTML = ''; document.getElementById('kbLoader').classList.remove('hidden');
+            try {
+                const res = await fetch(`${API_GET_ESTIMATES}?limit=${limit}`);
+                const j = await res.json();
+                if(j.status===0 && j.data && j.data.ids.length > 0) {
+                    j.data.ids.forEach((id, i) => createKBCard(grid, id, j.data.metadatas[i], j.data.documents[i]));
+                    kbLoaded=true;
+                } else grid.innerHTML = '<div class="col-span-full text-center text-slate-500">No estimates found.</div>';
+            } catch(e) { grid.innerHTML = '<div class="col-span-full text-center text-red-500">Connection error.</div>'; }
+            document.getElementById('kbLoader').classList.add('hidden');
+        }
+
+        function createKBCard(container, id, meta, md) {
+            const card = document.createElement('div');
+            card.className = "bg-white rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all hover:border-brand-200 p-6 flex flex-col h-full cursor-pointer group";
+            card.innerHTML = `
+                <div class="flex justify-between mb-4">
+                    <div class="p-2 bg-brand-50 rounded-lg text-brand-600 group-hover:bg-brand-600 group-hover:text-white transition-colors"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+                    <button class="text-slate-300 hover:text-red-500 z-10" onclick="deleteEstimate(event, '${id}')"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                </div>
+                <h3 class="font-bold text-lg text-slate-900 mb-2 truncate">${meta.title}</h3>
+                <p class="text-slate-500 text-sm mb-4 line-clamp-3">${meta.summary||"No summary"}</p>
+            `;
+            card.onclick = (e) => { if(!e.target.closest('button')) openModal(meta.title, md); };
+            container.appendChild(card);
+        }
+
+        async function deleteEstimate(e, id) {
+            e.stopPropagation(); if(!confirm("Delete this estimate?")) return;
+            try { await fetch(`${API_DELETE_ESTIMATE}/${id}`, {method:'DELETE'}); fetchKnowledgeBase(); showToast("Deleted."); }
+            catch(e) { showToast("Error", "error"); }
+        }
+
+        function openModal(title, md) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalContent').innerHTML = marked.parse(md);
+            document.getElementById('detailModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; 
+        }
+        function closeModal() { document.getElementById('detailModal').classList.add('hidden'); document.body.style.overflow = ''; }
+        function showToast(msg, type="success") {
+            const t = document.getElementById('toast');
+            t.querySelector('svg').classList.toggle('text-green-400', type!=='error');
+            t.querySelector('svg').classList.toggle('text-red-400', type==='error');
+            document.getElementById('toastMessage').innerText = msg;
+            t.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 3000);
+        }
+    </script>
+</body>
+</html>
