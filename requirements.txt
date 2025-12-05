@@ -4,3 +4,4 @@ google-genai
 chromadb
 #docling
 gunicorn
+openai
