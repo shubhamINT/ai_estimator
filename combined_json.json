@@ -4,412 +4,334 @@
     "response": {
       "features": [
         {
-          "name": "User Roles & Access (Buyer, Seller, Admin)",
+          "name": "Vendor notification email ingestion and processing",
           "breakdown": [
             {
-              "task": "Research and prototype role management strategies (RBAC, permissions)",
+              "task": "Set up inbox and environment to capture emails at change.notification@cipla.com (including permissions, connection, error logging)",
               "optimistic": 8,
               "most_likely": 10,
               "pessimistic": 12
             },
             {
-              "task": "Setup role models in backend (DB schema, API design)",
+              "task": "Research and prototype email body and attachment extraction for all major email formats (Outlook, Gmail, etc.)",
               "optimistic": 8,
               "most_likely": 10,
               "pessimistic": 12
             },
             {
-              "task": "Implement backend logic for role enforcement",
-              "optimistic": 10,
-              "most_likely": 12,
-              "pessimistic": 14
-            },
-            {
-              "task": "Frontend: Role-based UI access gates & route guards",
+              "task": "Develop logic to save email metadata, content, attachments to database/storage for processing",
               "optimistic": 8,
               "most_likely": 10,
               "pessimistic": 12
             },
             {
-              "task": "Manual/automated tests of access restrictions across all roles",
+              "task": "Extract email fields and file types; read and parse various attachment formats (.docx, .pdf, .xls, .png, etc.)",
               "optimistic": 8,
               "most_likely": 10,
               "pessimistic": 12
             }
           ],
           "type": "Backend",
-          "optimistic": 32,
+          "optimistic": 25,
           "most_likely": 40,
           "pessimistic": 48
         },
         {
-          "name": "Authentication (Buyer, Seller, Admin Login, Password Reset, Role-Based Access)",
+          "name": "Present ingested emails and attachments to CR team",
           "breakdown": [
             {
-              "task": "Research auth options, flows, security practices",
+              "task": "UI/UX research & prototyping to display email content and large multiple attachments",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
             },
             {
-              "task": "Backend: Implement email/password login per role",
+              "task": "Develop frontend views for list/detail of ingested notifications and attachments",
               "optimistic": 8,
               "most_likely": 10,
               "pessimistic": 12
             },
             {
-              "task": "Frontend: Build login forms and error handling for all roles",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Backend: Secure password hashing & storage",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Password reset: API workflow, token handling, email integration",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Enforce role-based access for resources and routes (middleware/guards)",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "End-to-end tests: login, forgot/reset, role restrictions",
+              "task": "Handle secure download/view of attachments (all file types)",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 42,
-          "most_likely": 52,
-          "pessimistic": 62
-        },
-        {
-          "name": "Onboarding & Verification",
-          "breakdown": [
-            {
-              "task": "Research onboarding best practices (KYC, workflow)",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
             },
             {
-              "task": "Buyer Registration: Forms, data validation, document upload backend",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Seller Registration: Forms for extra fields (type, years), KYC upload",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Admin - Buyer KYC Review workflow (UI/API)",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Admin - Seller KYC Review workflow (UI/API)",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Admin - Approve/Reject Buyer/Seller logic + notifications",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Verified Seller Badge: Admin toggle, display logic",
+              "task": "Connect backend API to frontend for listing, filtering, viewing emails+attachments",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
             }
           ],
           "type": "Frontend",
-          "optimistic": 40,
-          "most_likely": 48,
-          "pessimistic": 56
-        },
-        {
-          "name": "Subscriptions",
-          "breakdown": [
-            {
-              "task": "Research subscription model & product limit logic",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Implement product tiers: Platinum, Gold, Silver (backend validation, tier fields)",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Admin UI for tier assignment/changes, backend admin logic",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Subscription renewal flow (UI/backend for manual renewal, date handling)",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Enforce product count by subscription tier",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Offline payment admin workflow (UI, toggle, status)",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 38,
-          "most_likely": 48,
-          "pessimistic": 58
-        },
-        {
-          "name": "Seller Dashboard",
-          "breakdown": [
-            {
-              "task": "Research dashboard use cases (products, leads, notifications)",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Dashboard overview: Query and render product/leads/notification counts",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Edit profile: Form, backend logic for updatable fields",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Add/Edit/Delete Product workflows (UI + API, enforcing limits)",
-              "optimistic": 12,
-              "most_likely": 16,
-              "pessimistic": 20
-            },
-            {
-              "task": "Buyer messages inbox (thread list, unread logic, API)",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Reply to messages via thread (UI/API)",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Email alert logic for new and unreplied messages",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            }
-          ],
-          "type": "Frontend",
-          "optimistic": 58,
-          "most_likely": 74,
-          "pessimistic": 90
-        },
-        {
-          "name": "Product Management",
-          "breakdown": [
-            {
-              "task": "Research product models, minimal MVP fields, workflows",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Build product CRUD: name, description, category, image (UI + backend)",
-              "optimistic": 12,
-              "most_likely": 16,
-              "pessimistic": 20
-            },
-            {
-              "task": "Price, validity, auto-expiry, Contact Seller for Price logic",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "MOQ, payment terms, shipment mode fields (with predefined options)",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 27,
+          "optimistic": 21,
           "most_likely": 34,
-          "pessimistic": 41
+          "pessimistic": 42
         },
         {
-          "name": "Catalogue (Buyer)",
+          "name": "Validity check workflow",
           "breakdown": [
             {
-              "task": "Research buyer catalogue UX (filters, search, MVP data)",
+              "task": "Research criteria for validity and prototype rule-based detection logic",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
             },
             {
-              "task": "Implement browse products listing with all fields, responsive table/list",
+              "task": "Develop backend status assignment, branching logic, and route handling",
               "optimistic": 8,
               "most_likely": 10,
               "pessimistic": 12
             },
             {
-              "task": "Category, Seller Type, Verified Seller filters, keyword search (UI + API)",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Product detail page: Full data rendering, badge, price logic",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            }
-          ],
-          "type": "Frontend",
-          "optimistic": 30,
-          "most_likely": 38,
-          "pessimistic": 46
-        },
-        {
-          "name": "Buyer\u2013Seller Communication",
-          "breakdown": [
-            {
-              "task": "Research messaging flows suitable for MVP B2B marketplace",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Contact Seller: Button, message form, backend and notification logic",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Messaging thread/inbox UI for both buyer and seller sides (threaded, basic features)",
-              "optimistic": 10,
-              "most_likely": 12,
-              "pessimistic": 14
-            },
-            {
-              "task": "Email notifications: new message to seller, copy to admin",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Read-only admin view of all message threads",
+              "task": "Implement UI for CR team to view & manually update validity as needed",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
             }
           ],
           "type": "Backend",
-          "optimistic": 38,
-          "most_likely": 48,
-          "pessimistic": 58
+          "optimistic": 16,
+          "most_likely": 26,
+          "pessimistic": 32
         },
         {
-          "name": "Admin Panel \u2013 User Management",
+          "name": "SharePoint integration for Not Valid/Valid status",
           "breakdown": [
             {
-              "task": "Research admin user UIs and workflows for B2B platforms",
+              "task": "Research SharePoint API and prototype required endpoints (write, update, comments)",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
             },
             {
-              "task": "Build buyers/sellers list views, approval/reject flows (including filters)",
-              "optimistic": 10,
-              "most_likely": 12,
-              "pessimistic": 14
-            },
-            {
-              "task": "Implement assign/change subscription workflow",
+              "task": "Implement update logic to mark Not Valid, add comment, end process",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
             },
             {
-              "task": "Mark seller verified toggle logic",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
+              "task": "Error handling, authentication, and permission management for integration",
+              "optimistic": 4,
+              "most_likely": 6,
+              "pessimistic": 8
             }
           ],
-          "type": "Frontend",
-          "optimistic": 28,
-          "most_likely": 36,
-          "pessimistic": 44
+          "type": "Backend",
+          "optimistic": 13,
+          "most_likely": 22,
+          "pessimistic": 28
         },
         {
-          "name": "Admin Panel \u2013 Product Oversight & Metrics",
+          "name": "Initial evaluation of notification",
           "breakdown": [
             {
-              "task": "Research admin listing & metric dashboards",
-              "optimistic": 5,
+              "task": "Develop checklist forms (UI/backend) to identify change type, fields per CR checklist",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            },
+            {
+              "task": "Set up integration to ingest SAP data dump (ZQMR01) for Manufacturer/Supplier lookups",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            },
+            {
+              "task": "Map Material No. to category using SAP data; handle manual override logic",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            },
+            {
+              "task": "Attachment extraction/capture for emails, parse and store (if any)",
+              "optimistic": 4,
               "most_likely": 6,
               "pessimistic": 8
             },
             {
-              "task": "View all products, search/filter logic (UI + backend)",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Deactivate product (API + UI)",
+              "task": "UI for buyer/vendor details, implementation date, human intervention logic (manual input, fallback)",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
             },
             {
-              "task": "Display summary metrics: buyer, seller, product, lead counts",
+              "task": "Store vendor name, buyer details, change implementation date, change details, etc.",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
             }
           ],
-          "type": "Frontend",
-          "optimistic": 25,
-          "most_likely": 32,
-          "pessimistic": 40
+          "type": "Backend",
+          "optimistic": 30,
+          "most_likely": 50,
+          "pessimistic": 62
+        },
+        {
+          "name": "Duplicate check workflow",
+          "breakdown": [
+            {
+              "task": "Design and implement duplicate logic (field comparisons, fuzzy matching, DB queries)",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            },
+            {
+              "task": "Integrate with SharePoint: mark as Duplicate, update, terminate",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            }
+          ],
+          "type": "Backend",
+          "optimistic": 11,
+          "most_likely": 18,
+          "pessimistic": 22
+        },
+        {
+          "name": "SOP compliance and document-to-CR check",
+          "breakdown": [
+            {
+              "task": "Prototype and implement SOP classification logic (major/minor/moderate); read SOPs",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            },
+            {
+              "task": "Develop frontend/backend for document vs checklist matching workflow",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            }
+          ],
+          "type": "Backend",
+          "optimistic": 16,
+          "most_likely": 20,
+          "pessimistic": 24
+        },
+        {
+          "name": "SoC Request and API DMF/CEP version validation (API-only)",
+          "breakdown": [
+            {
+              "task": "Implement backend logic to send automated SoC email to vendor (template, triggers, logs)",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            },
+            {
+              "task": "Prototype logic to match/compare DMF/CEP version with SAP/internal docs and highlight diffs",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            }
+          ],
+          "type": "Backend",
+          "optimistic": 11,
+          "most_likely": 18,
+          "pessimistic": 22
+        },
+        {
+          "name": "Vendor document collection workflow",
+          "breakdown": [
+            {
+              "task": "Develop notification system for outstanding/missing document follow-up (emails, reminders, status tracking)",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            },
+            {
+              "task": "Implement logic to mark documents as collected, in process, or outstanding",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            }
+          ],
+          "type": "Backend",
+          "optimistic": 11,
+          "most_likely": 16,
+          "pessimistic": 20
+        },
+        {
+          "name": "Document validation against CR checklist",
+          "breakdown": [
+            {
+              "task": "Develop backend logic for completeness, validity and declaration requirement checks",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            },
+            {
+              "task": "Build UI for review/override by CR team as needed",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            }
+          ],
+          "type": "Backend",
+          "optimistic": 11,
+          "most_likely": 18,
+          "pessimistic": 22
+        },
+        {
+          "name": "Material code impact analysis",
+          "breakdown": [
+            {
+              "task": "Design/implement SAP extract logic for finding impacted materials, mapping to finished goods",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            },
+            {
+              "task": "Extract, filter, and clean impacted FG material lists (SAP ZPP_Fg_CUST), remove NA",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            },
+            {
+              "task": "Get existing stock details from SAP MB52/Certificate of Analysis from SAP MM03",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            }
+          ],
+          "type": "Backend",
+          "optimistic": 18,
+          "most_likely": 28,
+          "pessimistic": 34
+        },
+        {
+          "name": "TrackWise CR form & document package initiation",
+          "breakdown": [
+            {
+              "task": "Research Word document programmatic generation and zip file creation, prototype templates",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            },
+            {
+              "task": "Develop logic to collate all vendor-supplied documents into zip",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            },
+            {
+              "task": "Collate and attach all SAP/material code impact analysis extracts",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            },
+            {
+              "task": "Format and attach the impacted FG list (specified format); package all files for CR team review",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            }
+          ],
+          "type": "Backend",
+          "optimistic": 21,
+          "most_likely": 34,
+          "pessimistic": 42
         }
       ]
     },
@@ -420,1039 +342,391 @@
     "response": {
       "features": [
         {
-          "name": "User Roles & Access - Buyer Role",
+          "name": "1. Vendor Email Ingestion & Attachment Handling",
           "breakdown": [
             {
-              "task": "Define Buyer Role schema, initial database setup, and necessary indexing.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            },
-            {
-              "task": "Define basic restricted access policies (e.g., catalogue access).",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Setup core secure authentication framework (JWT/Session, token handling, refresh logic) for first role.",
-              "optimistic": 10,
-              "most_likely": 12,
-              "pessimistic": 14
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 18,
-          "most_likely": 22,
-          "pessimistic": 26
-        },
-        {
-          "name": "User Roles & Access - Seller Role",
-          "breakdown": [
-            {
-              "task": "Define Seller Role schema and necessary permissions structure.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            },
-            {
-              "task": "Define Seller dashboard/product management specific access policies.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 8,
-          "most_likely": 10,
-          "pessimistic": 12
-        },
-        {
-          "name": "User Roles & Access - Admin Role",
-          "breakdown": [
-            {
-              "task": "Define Admin Role schema (superuser) and necessary permissions structure.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            },
-            {
-              "task": "Define comprehensive full system control access policies.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 8,
-          "most_likely": 10,
-          "pessimistic": 12
-        },
-        {
-          "name": "Authentication - Buyer Login",
-          "breakdown": [
-            {
-              "task": "Implement unified Login API backend logic (handling email/password validation and RBAC lookup).",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Develop generic Login UI form component and specific routing for Buyer.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            },
-            {
-              "task": "Integrate client-side session/state management for Buyer.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 12,
-          "most_likely": 16,
-          "pessimistic": 20
-        },
-        {
-          "name": "Authentication - Seller Login",
-          "breakdown": [
-            {
-              "task": "Configure Login API specifically to verify Seller role/status upon authentication.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            },
-            {
-              "task": "Implement Seller Login UI routing/minor visual adaptations (reusing core login component).",
-              "optimistic": 2,
-              "most_likely": 3,
-              "pessimistic": 4
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 5,
-          "most_likely": 7,
-          "pessimistic": 9
-        },
-        {
-          "name": "Authentication - Admin Login",
-          "breakdown": [
-            {
-              "task": "Implement secure Admin Login API configuration (e.g., specific rate limiting/monitoring checks).",
-              "optimistic": 4,
-              "most_likely": 5,
-              "pessimistic": 6
-            },
-            {
-              "task": "Implement dedicated Admin Login UI component (potentially separate route/theme).",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 7,
-          "most_likely": 9,
-          "pessimistic": 11
-        },
-        {
-          "name": "Authentication - Password Reset",
-          "breakdown": [
-            {
-              "task": "Backend API for initiating reset (email validation, token generation, storage, expiry).",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Configure and integrate SMTP service/Email provider for sending password reset links.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Frontend UI for requesting reset email and handling success/error states.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            },
-            {
-              "task": "Frontend UI for token verification and entering new password form.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 19,
-          "most_likely": 24,
-          "pessimistic": 29
-        },
-        {
-          "name": "Authentication - Role-Based Access",
-          "breakdown": [
-            {
-              "task": "Implement Backend middleware/guards across all essential API groups (product, user, message) based on role claims.",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Implement Frontend routing guards to restrict page access based on role state/permissions.",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Implement UI element visibility logic (e.g., hide Seller functionality from Buyer) based on user role.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 19,
-          "most_likely": 24,
-          "pessimistic": 29
-        },
-        {
-          "name": "Onboarding & Verification - Buyer Registration",
-          "breakdown": [
-            {
-              "task": "Backend API setup for buyer registration (data validation, initial pending status setting).",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Setup cloud storage integration (S3/similar) for KYC document handling.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Develop Buyer Registration Form UI (Business Info + Upload component).",
+              "task": "Research & Setup: Email service/API integration (e.g., MS Graph/Exchange API, specialized ingestion service).",
               "optimistic": 10,
               "most_likely": 12,
               "pessimistic": 14
             },
             {
-              "task": "Frontend validation and error handling for form submission.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Frontend",
-          "optimistic": 24,
-          "most_likely": 30,
-          "pessimistic": 36
-        },
-        {
-          "name": "Onboarding & Verification - Seller Registration",
-          "breakdown": [
-            {
-              "task": "Backend API setup for seller registration (handling additional fields like manufacturer/trader type and years).",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
+              "task": "Implement secure email ingestion endpoint (polling or webhook setup) and process incoming emails from change.notification@cipla.com.",
+              "optimistic": 13,
+              "most_likely": 16,
+              "pessimistic": 19
             },
             {
-              "task": "Develop complex Seller Registration Form UI, integrating multiple unique fields and document upload.",
+              "task": "Parse email body, extract metadata (sender, subject, timestamp).",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            },
+            {
+              "task": "Implement secure attachment handling (storage, metadata extraction).",
               "optimistic": 11,
               "most_likely": 14,
               "pessimistic": 17
             },
             {
-              "task": "Ensure file upload integration is robust for seller KYC documents.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Frontend",
-          "optimistic": 22,
-          "most_likely": 28,
-          "pessimistic": 34
-        },
-        {
-          "name": "Onboarding & Verification - Buyer KYC Review",
-          "breakdown": [
-            {
-              "task": "Admin Backend API to fetch pending Buyer applications and secure links to associated KYC documents.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Admin Frontend UI component to display Buyer application details, status, and document preview.",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            }
-          ],
-          "type": "Frontend",
-          "optimistic": 13,
-          "most_likely": 16,
-          "pessimistic": 19
-        },
-        {
-          "name": "Onboarding & Verification - Seller KYC Review",
-          "breakdown": [
-            {
-              "task": "Admin Backend API to fetch pending Seller applications (including specialized seller fields).",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Admin Frontend UI component to display complex Seller application details (type, years, documents).",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            }
-          ],
-          "type": "Frontend",
-          "optimistic": 13,
-          "most_likely": 16,
-          "pessimistic": 19
-        },
-        {
-          "name": "Onboarding & Verification - Approve/Reject Buyer",
-          "breakdown": [
-            {
-              "task": "Backend API to handle Buyer status update (Pending -> Approved/Rejected).",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Implement status change logging and basic email notification trigger to Buyer.",
-              "optimistic": 4,
-              "most_likely": 5,
-              "pessimistic": 6
-            },
-            {
-              "task": "Admin UI implementation of Approval/Rejection buttons and confirmation flow.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 12,
-          "most_likely": 15,
-          "pessimistic": 18
-        },
-        {
-          "name": "Onboarding & Verification - Approve/Reject Seller",
-          "breakdown": [
-            {
-              "task": "Backend API to handle Seller status update (Pending -> Approved/Rejected) and subsequent role privileges activation.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Implement status change logging and basic email notification trigger to Seller.",
-              "optimistic": 4,
-              "most_likely": 5,
-              "pessimistic": 6
-            },
-            {
-              "task": "Admin UI implementation of Approval/Rejection buttons on Seller review screen.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 12,
-          "most_likely": 15,
-          "pessimistic": 18
-        },
-        {
-          "name": "Onboarding & Verification - Verified Seller Badge",
-          "breakdown": [
-            {
-              "task": "Backend field implementation and API endpoint for Admin to toggle 'Verified' status manually.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Frontend: Develop and integrate the 'Verified Seller Badge' UI component across relevant views (Profile, Catalogue).",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Ensure 'Verified' status is exposed securely via API endpoints consumed by the Catalogue.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 13,
-          "most_likely": 16,
-          "pessimistic": 19
-        },
-        {
-          "name": "Subscriptions - Tier Assignment (Platinum/Gold/Silver & Assignment)",
-          "breakdown": [
-            {
-              "task": "Backend: Define subscription tiers model including product limits and related configurations.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Backend: API for Admin to manually assign/change Seller subscription tier (data validation and history tracking).",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Admin UI: Develop Subscription Management screen integrated with Seller list for tier selection and assignment.",
+              "task": "Database schema design for storing email data and attachment references.",
               "optimistic": 8,
               "most_likely": 10,
               "pessimistic": 12
             }
           ],
           "type": "Backend",
-          "optimistic": 19,
-          "most_likely": 24,
-          "pessimistic": 29
+          "optimistic": 48,
+          "most_likely": 60,
+          "pessimistic": 72
         },
         {
-          "name": "Subscriptions - Subscription Renewal",
+          "name": "2. CR Team Review UI (Presentation of Ingested Content)",
           "breakdown": [
             {
-              "task": "Backend: Implement date tracking (Start Date, End Date) for subscriptions.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Backend: API for Admin to manually renew subscription (update end date).",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Admin UI: Implement renewal action/form on Admin subscription screen.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 13,
-          "most_likely": 16,
-          "pessimistic": 19
-        },
-        {
-          "name": "Subscriptions - Offline Payment Handling",
-          "breakdown": [
-            {
-              "task": "Backend: Define status flags for payment verification (e.g., Paid Offline, Pending Verification).",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            },
-            {
-              "task": "Admin UI: Interface/field to manually record payment status confirmation associated with a renewal event.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 8,
-          "most_likely": 10,
-          "pessimistic": 12
-        },
-        {
-          "name": "Subscriptions - Product Count Enforcement",
-          "breakdown": [
-            {
-              "task": "Backend: Implement logic to dynamically fetch the allowed product count based on Seller's active subscription tier.",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Backend: Implement pre-save hook/validation on the Add Product API to check current count against the tier limit.",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Seller Dashboard UI: Display current usage vs limit and block/grey out Add Product button if limit reached.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 17,
-          "most_likely": 22,
-          "pessimistic": 27
-        },
-        {
-          "name": "Seller Dashboard - Dashboard Overview",
-          "breakdown": [
-            {
-              "task": "Backend API to fetch summary metrics (product count, leads count, unread notifications/messages).",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Frontend UI development for the main Seller Dashboard view, ensuring restricted access.",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Integration and display of fetched metrics and quick-access navigation tiles.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Frontend",
-          "optimistic": 17,
-          "most_likely": 22,
-          "pessimistic": 27
-        },
-        {
-          "name": "Seller Dashboard - Edit Profile",
-          "breakdown": [
-            {
-              "task": "Backend API to handle limited profile updates (contact person, description) enforcing ownership checks.",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Frontend UI form for profile editing, pre-filling existing data, and handling submission.",
-              "optimistic": 5,
-              "most_likely": 7,
-              "pessimistic": 8
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 11,
-          "most_likely": 15,
-          "pessimistic": 18
-        },
-        {
-          "name": "Seller Dashboard - Add Product",
-          "breakdown": [
-            {
-              "task": "Define Product Database Schema including all specified fields (Name, Desc, Category ID, Price, MOQ, Terms, Shipment, Seller ID).",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Setup Category/Payment/Shipment data dictionary lookup tables and endpoints.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Backend API for secure product creation, linking to seller ID, and mandatory field validation (Name).",
-              "optimistic": 10,
-              "most_likely": 14,
-              "pessimistic": 17
-            },
-            {
-              "task": "Frontend UI development for Add Product form (Text areas, dropdowns for Category/Terms/Shipment, numerical inputs for Price/MOQ).",
-              "optimistic": 11,
-              "most_likely": 14,
-              "pessimistic": 17
-            },
-            {
-              "task": "Implement client/server validation for all fields and handling success/error messaging.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 39,
-          "most_likely": 50,
-          "pessimistic": 60
-        },
-        {
-          "name": "Product Management - Single Image Upload (MVP)",
-          "breakdown": [
-            {
-              "task": "Setup image upload API endpoint, handling file validation and integration with cloud storage (using existing setup).",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Frontend UI component for image upload/preview integrated into Add/Edit form (MVP limitation: single image).",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Update product schema and API logic to store and retrieve the single image URL reference.",
-              "optimistic": 2,
-              "most_likely": 3,
-              "pessimistic": 4
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 15,
-          "most_likely": 19,
-          "pessimistic": 23
-        },
-        {
-          "name": "Product Management - Price Validity & Expiry",
-          "breakdown": [
-            {
-              "task": "Backend: Implement fields for Price Validity Date and 'Contact Seller for Price' flag.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            },
-            {
-              "task": "Backend: Implement core logic to dynamically determine if price is active based on validity date/flag.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Frontend UI implementation in Add/Edit form for date picker and checkbox option.",
-              "optimistic": 4,
-              "most_likely": 5,
-              "pessimistic": 6
-            },
-            {
-              "task": "Backend: Setup basic cron job/scheduled task to update product status when validity date expires ('Auto Price Expiry').",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 18,
-          "most_likely": 23,
-          "pessimistic": 28
-        },
-        {
-          "name": "Seller Dashboard - Edit Product",
-          "breakdown": [
-            {
-              "task": "Backend API for fetching single product details and handling PUT/PATCH updates, enforcing seller ownership.",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Frontend UI: Adapt Add Product form for Edit functionality (pre-filling data and handling updates).",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 11,
-          "most_likely": 14,
-          "pessimistic": 17
-        },
-        {
-          "name": "Seller Dashboard - Delete Product",
-          "breakdown": [
-            {
-              "task": "Backend API for product deletion (soft deletion preferred) with strict seller ownership verification.",
-              "optimistic": 4,
-              "most_likely": 5,
-              "pessimistic": 6
-            },
-            {
-              "task": "Frontend UI integration (list view action, confirmation modal).",
-              "optimistic": 2,
-              "most_likely": 3,
-              "pessimistic": 4
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 6,
-          "most_likely": 8,
-          "pessimistic": 10
-        },
-        {
-          "name": "Catalogue (Buyer) - Browse Products & Listing UI",
-          "breakdown": [
-            {
-              "task": "Backend API for fetching all active, approved products (optimized for public consumption/pagination).",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Frontend UI for Product Listing Page (Grid/List view, responsiveness, pagination).",
+              "task": "Design & implement Email Review Dashboard/Screen layout.",
               "optimistic": 10,
               "most_likely": 12,
               "pessimistic": 14
             },
             {
-              "task": "Backend API for fetching single Product Detail (aggregating seller info and product status).",
+              "task": "API integration to fetch and display ingested email content and extracted metadata.",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
             },
             {
-              "task": "Frontend UI for Product Detail Page layout and component integration.",
+              "task": "Implement secure attachment listing and preview/download functionality.",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            },
+            {
+              "task": "Basic error handling and state management for the review screen.",
+              "optimistic": 5,
+              "most_likely": 6,
+              "pessimistic": 7
+            }
+          ],
+          "type": "Frontend",
+          "optimistic": 29,
+          "most_likely": 36,
+          "pessimistic": 43
+        },
+        {
+          "name": "3. Validity Check Workflow & SharePoint Integration",
+          "breakdown": [
+            {
+              "task": "Design and implement Validity Check data model/API endpoint for decision capture.",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            },
+            {
+              "task": "Research & Setup: SharePoint API integration (authentication, list item access).",
+              "optimistic": 13,
+              "most_likely": 16,
+              "pessimistic": 19
+            },
+            {
+              "task": "Implement 'Not Valid' workflow branch: update SharePoint item status to 'Not Valid' and add comment 'CR not required.'",
+              "optimistic": 10,
+              "most_likely": 12,
+              "pessimistic": 14
+            },
+            {
+              "task": "Implement workflow termination logic for the 'Not Valid' path.",
+              "optimistic": 3,
+              "most_likely": 4,
+              "pessimistic": 5
+            },
+            {
+              "task": "Implement 'Valid' path transition and state update.",
+              "optimistic": 3,
+              "most_likely": 4,
+              "pessimistic": 5
+            }
+          ],
+          "type": "Backend",
+          "optimistic": 35,
+          "most_likely": 44,
+          "pessimistic": 53
+        },
+        {
+          "name": "4. Initial Evaluation - SAP Data Retrieval and Mapping",
+          "breakdown": [
+            {
+              "task": "Research & Setup: SAP integration methods (BAPI/RFC/OData) for data extraction and environment configuration.",
+              "optimistic": 13,
+              "most_likely": 16,
+              "pessimistic": 19
+            },
+            {
+              "task": "Develop backend services to interface with SAP to fetch and cache ZQMR01 (Manufacturer list data dump).",
+              "optimistic": 14,
+              "most_likely": 18,
+              "pessimistic": 22
+            },
+            {
+              "task": "Implement logic to map 'Manufacturer Description' to 'Supplier code' and 'Material No.' via ZQMR01 data.",
+              "optimistic": 13,
+              "most_likely": 16,
+              "pessimistic": 19
+            },
+            {
+              "task": "Develop service/logic to identify material category (RM/PM) by mapping 'Material No.' to category data (SAP).",
               "optimistic": 11,
               "most_likely": 14,
               "pessimistic": 17
             },
             {
-              "task": "Implement Price Display logic (active price vs 'Contact Seller') and display all related fields (MOQ, Terms, Shipment).",
+              "task": "Implement structured data capture for Change Type, Change Details, and Implementation Date.",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            },
+            {
+              "task": "Implement persistence layer for storing all initial evaluation fields and extracted codes.",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            }
+          ],
+          "type": "Backend",
+          "optimistic": 65,
+          "most_likely": 82,
+          "pessimistic": 99
+        },
+        {
+          "name": "4. Initial Evaluation - Human Intervention UI",
+          "breakdown": [
+            {
+              "task": "Develop UI form to display extracted data (Vendor Name, Material codes/Category) and allow CR team input for mandatory fields (Change Type, Dates).",
+              "optimistic": 14,
+              "most_likely": 17,
+              "pessimistic": 20
+            },
+            {
+              "task": "Implement dynamic UI state for handling missing material code and capturing Buyer details (Human Intervention required fields).",
+              "optimistic": 10,
+              "most_likely": 12,
+              "pessimistic": 14
+            },
+            {
+              "task": "Implement form validation and submission API for initial evaluation data.",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
             }
           ],
           "type": "Frontend",
-          "optimistic": 41,
-          "most_likely": 52,
-          "pessimistic": 63
+          "optimistic": 30,
+          "most_likely": 37,
+          "pessimistic": 44
         },
         {
-          "name": "Catalogue (Buyer) - Search & Filtering",
+          "name": "5. Duplicate Check Workflow",
           "breakdown": [
             {
-              "task": "Backend API: Implement multi-parameter filtering logic (Category, Seller Type, Verified Status).",
+              "task": "Define and implement duplicate check algorithm based on key extracted fields (Material No., Vendor, Change Details/Type).",
+              "optimistic": 10,
+              "most_likely": 12,
+              "pessimistic": 14
+            },
+            {
+              "task": "Implement logic to query existing CR records (DB/SharePoint) based on duplication criteria.",
               "optimistic": 8,
               "most_likely": 10,
               "pessimistic": 12
             },
             {
-              "task": "Backend API: Implement basic keyword search by product name (indexing/query optimization).",
+              "task": "Implement 'If Duplicate' branch: update SharePoint status to 'Duplicate CR' and trigger process termination.",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
             },
             {
-              "task": "Frontend UI components for filters (checkboxes, dropdowns) and search bar.",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
+              "task": "Implement 'If Not Duplicate' transition logic.",
+              "optimistic": 3,
+              "most_likely": 4,
+              "pessimistic": 5
+            }
+          ],
+          "type": "Backend",
+          "optimistic": 27,
+          "most_likely": 34,
+          "pessimistic": 41
+        },
+        {
+          "name": "6. SOP Compliance Classification",
+          "breakdown": [
+            {
+              "task": "Develop rules engine/mapping structure for classifying CRs as major/minor/moderate based on SOP criteria and initial evaluation data.",
+              "optimistic": 13,
+              "most_likely": 16,
+              "pessimistic": 19
             },
             {
-              "task": "Frontend: Integrate filter state management with listing API calls and UI feedback.",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
+              "task": "Implement logic to match required vendor documents against the CR checklist based on SOP classification.",
+              "optimistic": 10,
+              "most_likely": 12,
+              "pessimistic": 14
+            },
+            {
+              "task": "Persist SOP classification results and the list of required documents.",
+              "optimistic": 5,
+              "most_likely": 6,
+              "pessimistic": 7
             }
           ],
           "type": "Backend",
           "optimistic": 28,
-          "most_likely": 36,
-          "pessimistic": 44
+          "most_likely": 34,
+          "pessimistic": 40
         },
         {
-          "name": "Catalogue (Buyer) - Seller Summary Display",
+          "name": "7. SoC Request and API Material Verification",
           "breakdown": [
             {
-              "task": "Backend: Ensure Seller details (Years in Business, Type, Verified Badge status) are efficiently fetched alongside product data.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
+              "task": "Implement automated email trigger logic for Statement of Change (SoC) request (API-only scenario).",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
             },
             {
-              "task": "Frontend UI component for Seller Summary box on Detail Page, conditional rendering of Verified Badge.",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
+              "task": "Design data model/storage for Cipla registered DMF/CEP version and vendor confirmed version.",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            },
+            {
+              "task": "Implement comparison logic between Cipla dossier version and vendor confirmed version, highlighting discrepancies.",
+              "optimistic": 11,
+              "most_likely": 14,
+              "pessimistic": 17
             }
           ],
-          "type": "Frontend",
-          "optimistic": 11,
-          "most_likely": 14,
-          "pessimistic": 17
+          "type": "Backend",
+          "optimistic": 27,
+          "most_likely": 34,
+          "pessimistic": 41
         },
         {
-          "name": "Buyer\u2013Seller Communication - Messaging Foundation (Core Threading)",
+          "name": "8 & 9. Document Collection and Validation Workflow",
           "breakdown": [
             {
-              "task": "Backend: Define Messaging Schema (Thread ID, Buyer ID, Seller ID, subject, messages, status).",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Backend API: Endpoint for Buyer to initiate a new thread (Contact Seller Button -> Form submission).",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Backend API: Endpoint for posting a reply within an existing thread (used by both Buyer/Seller).",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Frontend: Implement 'Contact Seller' button on Product Page and initial message form UI.",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Frontend: Implement the core Messaging Thread UI component (displaying history and reply box).",
+              "task": "Implement tracking mechanism (DB/workflow state) to monitor received vs. required vendor documents.",
               "optimistic": 10,
               "most_likely": 12,
               "pessimistic": 14
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 40,
-          "most_likely": 50,
-          "pessimistic": 60
-        },
-        {
-          "name": "Buyer\u2013Seller Communication - Inbox & History",
-          "breakdown": [
+            },
             {
-              "task": "Backend API: Endpoint to fetch Buyer's message history (list of threads associated with user).",
+              "task": "Develop CR team UI to track document status and trigger follow-up reminders (manual/semi-automated).",
+              "optimistic": 13,
+              "most_likely": 16,
+              "pessimistic": 19
+            },
+            {
+              "task": "Implement Document Validation logic for completeness (all documents received).",
+              "optimistic": 8,
+              "most_likely": 10,
+              "pessimistic": 12
+            },
+            {
+              "task": "Implement Document Validation logic for validity (basic checks against checklist).",
+              "optimistic": 11,
+              "most_likely": 14,
+              "pessimistic": 17
+            },
+            {
+              "task": "Implement Document Validation logic for required declarations.",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
-            },
-            {
-              "task": "Backend API: Endpoint to fetch Seller's message inbox (list of active threads, including unread status flags).",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Frontend UI: Buyer Message History page listing threads and links to view conversation.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Frontend UI: Seller Message Inbox page listing threads and links to view conversation.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
             }
           ],
           "type": "Frontend",
-          "optimistic": 22,
-          "most_likely": 28,
-          "pessimistic": 34
+          "optimistic": 48,
+          "most_likely": 60,
+          "pessimistic": 72
         },
         {
-          "name": "Buyer\u2013Seller Communication - Email Notification to Seller/Admin",
+          "name": "10. Material Code Impact Analysis (SAP Extraction)",
           "breakdown": [
             {
-              "task": "Backend: Implement logic hook post-message creation to trigger notification email to Seller.",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
+              "task": "Develop SAP API calls to identify Finished Goods (FG) usage based on impacted materials (T-codes/views).",
+              "optimistic": 14,
+              "most_likely": 18,
+              "pessimistic": 22
             },
             {
-              "task": "Backend: Implement logic hook to send a copy/notification email to Admin upon new message creation.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
+              "task": "Develop SAP API call to extract Impacted FG material list from SAP ZPP_Fg_CUST.",
+              "optimistic": 13,
+              "most_likely": 16,
+              "pessimistic": 19
             },
             {
-              "task": "Design and configure basic email templates for new message alerts.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 14,
-          "most_likely": 18,
-          "pessimistic": 22
-        },
-        {
-          "name": "Seller Dashboard - Email Alert - Unreplied Message",
-          "breakdown": [
-            {
-              "task": "Backend: Define complex logic for identifying 'unreplied' messages (e.g., last message was buyer, older than X days).",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Backend: Setup reliable recurring cron job to execute the check and trigger reminder emails.",
+              "task": "Implement filtering logic to remove non-used or NA items from the extracted FG list.",
               "optimistic": 8,
               "most_likely": 10,
               "pessimistic": 12
             },
             {
-              "task": "Configure Email Template for 'Unreplied Message' reminder.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 17,
-          "most_likely": 22,
-          "pessimistic": 27
-        },
-        {
-          "name": "Buyer\u2013Seller Communication - Admin View of Messages",
-          "breakdown": [
-            {
-              "task": "Backend API: Endpoint allowing Admin role to fetch ALL threads (system-wide read-only access).",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
+              "task": "Develop SAP API call to retrieve existing stock details (MB52).",
+              "optimistic": 11,
+              "most_likely": 14,
+              "pessimistic": 17
             },
             {
-              "task": "Admin UI: Develop list view and read-only messaging interface/thread viewer for the Admin panel.",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 14,
-          "most_likely": 18,
-          "pessimistic": 22
-        },
-        {
-          "name": "Admin Panel - User Management - View Buyers",
-          "breakdown": [
-            {
-              "task": "Backend API: Endpoint to fetch list of Buyers.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
+              "task": "Develop SAP API call to retrieve Certificate of Analysis (CoA) (MM03).",
+              "optimistic": 11,
+              "most_likely": 14,
+              "pessimistic": 17
             },
             {
-              "task": "Backend API: Implement filtering/sorting by status (Pending/Approved/Rejected).",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Admin UI: Develop Buyer Listing Data grid with filters, pagination, and links to review/action.",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            }
-          ],
-          "type": "Frontend",
-          "optimistic": 19,
-          "most_likely": 24,
-          "pessimistic": 29
-        },
-        {
-          "name": "Admin Panel - User Management - View Sellers",
-          "breakdown": [
-            {
-              "task": "Backend API: Endpoint to fetch list of Sellers with KYC status and subscription tier data.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Backend API: Implement complex filtering/sorting based on Pending/Approved/Verified/Tier status.",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Admin UI: Develop Seller Listing Data grid, filters, pagination, and links for status management.",
-              "optimistic": 10,
-              "most_likely": 12,
-              "pessimistic": 14
-            }
-          ],
-          "type": "Frontend",
-          "optimistic": 23,
-          "most_likely": 28,
-          "pessimistic": 33
-        },
-        {
-          "name": "Admin Panel - Product Oversight - View All Products & Filtering",
-          "breakdown": [
-            {
-              "task": "Backend API: Endpoint to fetch ALL products (active/inactive) for Admin view, ignoring seller ownership.",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Backend API: Implement basic search and filtering on product name and status.",
-              "optimistic": 6,
-              "most_likely": 8,
-              "pessimistic": 10
-            },
-            {
-              "task": "Admin UI: Develop Product Listing Table with associated Seller details and key product attributes.",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            }
-          ],
-          "type": "Frontend",
-          "optimistic": 20,
-          "most_likely": 26,
-          "pessimistic": 32
-        },
-        {
-          "name": "Admin Panel - Product Oversight - Deactivate Product",
-          "breakdown": [
-            {
-              "task": "Backend API: Endpoint to toggle 'Active' status (hide/remove) on a product, restricted to Admin.",
-              "optimistic": 5,
-              "most_likely": 6,
-              "pessimistic": 7
-            },
-            {
-              "task": "Admin UI: Implement action button/toggle on the Product Listing table with confirmation.",
-              "optimistic": 3,
-              "most_likely": 4,
-              "pessimistic": 5
-            }
-          ],
-          "type": "Backend",
-          "optimistic": 8,
-          "most_likely": 10,
-          "pessimistic": 12
-        },
-        {
-          "name": "Admin Panel - Metrics - Core Metrics Display",
-          "breakdown": [
-            {
-              "task": "Backend API: Endpoint to calculate and return aggregate counts (Buyers, Sellers, Active Products, Leads). Requires optimized DB queries.",
-              "optimistic": 8,
-              "most_likely": 10,
-              "pessimistic": 12
-            },
-            {
-              "task": "Admin UI: Develop Metrics Dashboard panel to prominently display key operational figures.",
+              "task": "Implement data structuring and storage for all SAP extracts.",
               "optimistic": 6,
               "most_likely": 8,
               "pessimistic": 10
             }
           ],
           "type": "Backend",
-          "optimistic": 14,
-          "most_likely": 18,
-          "pessimistic": 22
+          "optimistic": 63,
+          "most_likely": 80,
+          "pessimistic": 97
+        },
+        {
+          "name": "11. TrackWise CR Form Initiation (Output Generation)",
+          "breakdown": [
+            {
+              "task": "Research and implement document generation library (e.g., DOCX) for creating the TrackWise Word document.",
+              "optimistic": 14,
+              "most_likely": 18,
+              "pessimistic": 22
+            },
+            {
+              "task": "Implement synthesis logic to compile all requisite fields (from Initial Evaluation, SOP, DMF checks) into the Word template.",
+              "optimistic": 11,
+              "most_likely": 14,
+              "pessimistic": 17
+            },
+            {
+              "task": "Implement logic to create a ZIP file containing vendor documents, SAP extracts, and the impacted FG list (specified format).",
+              "optimistic": 13,
+              "most_likely": 16,
+              "pessimistic": 19
+            },
+            {
+              "task": "Create final API endpoint for the CR team to download the compiled package (Word + Zip).",
+              "optimistic": 6,
+              "most_likely": 8,
+              "pessimistic": 10
+            }
+          ],
+          "type": "Backend",
+          "optimistic": 44,
+          "most_likely": 56,
+          "pessimistic": 68
         }
       ]
     },
